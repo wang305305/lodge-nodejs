@@ -13,4 +13,4 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(routes)
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`App listening on port ${port}!`))

@@ -1,9 +1,16 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const jwt = require('jsonwebtoken');
+
 const userSchema = new Schema({
+    email: {
+        type: String,
+        required: 'Username cannot be empty'
+    },
     email: {
         type: String,
         required: 'Email cannot be empty'
@@ -35,5 +42,21 @@ userSchema.pre('save', async function save(next) {
     next();
 })
 
+userSchema.methods.generateJWT = function (req, res) {
+    console.log(this.username)
+    console.log(req)
+    const JWT = jwt.sign(
+        {
+            username: req.body.username
+        },
+        'PrivKey',
+        { expiresIn: "100m" }
+    );
+    console.log(JWT)
+    return res.cookie("token", JWT, {
+        secure: false,
+        httpOnly: true,
+    })
+};
 
-module.exports = mongoose.model('User', userSchema, 'users' )
+module.exports = mongoose.model('User', userSchema, 'users')
