@@ -6,6 +6,7 @@ const User = require('../models/user.model')
 module.exports.register = async (req, res, next) => {
     let user = new User();
     user.email = req.body.email;
+    user.username = req.body.username;
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
     user.password = req.body.password;
@@ -43,3 +44,9 @@ module.exports.logout = async (req, res, next) => {
     res.clearCookie("token");
     res.send({ success: true });
   };
+
+
+//   module.exports.welcome = async (req, res, next) => {
+//     console.log("welco")
+//     res.send({ message: "welcomeeeeeeeeeeeeeeeee"});
+//   };

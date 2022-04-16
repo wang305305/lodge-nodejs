@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = async (req, res, next) => {
-    const token = req.headers.cookie.slice(6,);
+    if (req.headers.cookie) {
+      const token = req.headers.cookie.slice(6,);
+    } else {
+      return res.status(401).send("no access token");
+    }
+
     console.log(token)
     if (!token)
       return res.status(401).send("no access token");

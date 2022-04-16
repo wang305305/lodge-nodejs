@@ -9,5 +9,6 @@ router.post('/register', userController.register);
 router.post('/verifyToken', verifyToken);
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
+router.get('/', userController.welcome);
 
 module.exports = router;
