@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-db_url = 'mongodb://localhost:27017/lodge_db'
+db_url = 'mongodb://localhost:28081/lodge_db'
 
 main().catch(err => console.log(err));
 

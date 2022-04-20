@@ -46,7 +46,7 @@ module.exports.logout = async (req, res, next) => {
   };
 
 
-//   module.exports.welcome = async (req, res, next) => {
-//     console.log("welco")
-//     res.send({ message: "welcomeeeeeeeeeeeeeeeee"});
-//   };
+  module.exports.welcome = async (req, res, next) => {
+    console.log("welco")
+    res.send({ message: "welcomeeeeeeeeeeeeeeeee"});
+  };
