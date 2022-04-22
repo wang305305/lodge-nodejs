@@ -52,9 +52,10 @@ userSchema.methods.generateJWT = function (req, res) {
         'PrivKey',
         { expiresIn: "100m" }
     );
+    console.log(JWT)
     return res.cookie("token", JWT, {
         secure: false,
-        httpOnly: true,
+        httpOnly: false,
     })
 };
 

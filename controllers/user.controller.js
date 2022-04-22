@@ -31,18 +31,23 @@ module.exports.login = async (req, res, next) => {
         console.log(user)
         const match = await bcrypt.compare(req.body.password, user.password);
         if (match) {
-            await user.generateJWT(req, res).send();
+            cookie = await user.generateJWT(req, res);
+            return cookie
+            .status(200)
+            .json({ user: user });
         } else {
             return res.status(400).send("Incorrect password");
         }
     } catch (err) {
-        res.status(500).json(err.toString());
+        return res.status(500).json(err.toString());
     }
 }
 
 module.exports.logout = async (req, res, next) => {
+    console.log("logout")
     res.clearCookie("token");
-    res.send({ success: true });
+    res.status(200)
+    .json({ success: true });
   };
 
 
