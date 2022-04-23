@@ -33,8 +33,8 @@ module.exports.login = async (req, res, next) => {
         if (match) {
             cookie = await user.generateJWT(req, res);
             return cookie
-            .status(200)
-            .json({ user: user });
+                .status(200)
+                .json({ user: user });
         } else {
             return res.status(400).send("Incorrect password");
         }
@@ -46,12 +46,24 @@ module.exports.login = async (req, res, next) => {
 module.exports.logout = async (req, res, next) => {
     console.log("logout")
     res.clearCookie("token");
+    res.clearCookie("user");
     res.status(200)
-    .json({ success: true });
-  };
+        .json({ success: true });
+};
 
+module.exports.getUserProfile = async (req, res, next) => {
+    console.log("getUserProfile")
+    try {
+        const user = await User.findOne({ username: req.query.username }).exec();
+        if (!user) return res.status(400).send("Cannot find user profile with username " + req.body.username);
+        console.log(user)
+        res.status(200).json({ user: user });
+    } catch (err) {
+        return res.status(500).json(err.toString());
+    }
+}
 
-  module.exports.welcome = async (req, res, next) => {
+module.exports.welcome = async (req, res, next) => {
     console.log("welco")
-    res.send({ message: "welcomeeeeeeeeeeeeeeeee"});
-  };
+    res.send({ message: "welcomeeeeeeeeeeeeeeeee" });
+};
