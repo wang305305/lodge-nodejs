@@ -6,7 +6,7 @@ const Image = require('../models/image.model')
 
 module.exports.uploadProfileImage = async (req, res, next) => {
     console.log("uploadProfileImage")
-    console.log(req.file, req.body.username)
+
     try {
 
         image = new Image()
@@ -54,7 +54,7 @@ module.exports.uploadProfileImage = async (req, res, next) => {
 
 module.exports.getProfileImage = async (req, res, next) => {
     console.log("getProfileImage")
-    console.log(req)
+
     try {
         console.log("req.query.username:" + req.query.username)
         Image.findOne({ username: req.query.username }, (err, item) => {
@@ -63,7 +63,7 @@ module.exports.getProfileImage = async (req, res, next) => {
                 res.status(500).send('An error occurred', err);
             }
             else {
-                console.log(item.img.data)
+
                 res.json({ img64: item?.img?.data?.toString('base64') })
             }
         });
