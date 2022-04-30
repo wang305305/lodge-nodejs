@@ -11,6 +11,13 @@ module.exports.register = async (req, res, next) => {
     user.lastName = req.body.lastName;
     user.password = req.body.password;
     user.lodgeOwner = req.body.lodgeOwner;
+
+    // check unique username and email 
+    const username_result = await User.findOne({ username: req.body.username }).exec();
+    if (username_result) return res.status(400).send({ message: "Duplicate username" });
+    const email_result = await User.findOne({ username: req.body.username }).exec();
+    if (email_result) return res.status(400).send({ message: "Duplicate email" });
+
     await user.save(async err => {
         if (err) {
             console.log(err)
