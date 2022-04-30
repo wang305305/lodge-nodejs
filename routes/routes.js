@@ -4,6 +4,7 @@ const router = express.Router();
 
 const userController = require('../controllers/user.controller');
 const imageController = require('../controllers/image.controller');
+const lodgeController = require('../controllers/lodge.controller');
 const verifyToken = require('../controllers/auth')
 
 const multer  = require('multer')
@@ -18,6 +19,6 @@ router.get('/getUserProfile', userController.getUserProfile)
 router.post('/updateUserProfile', userController.updateUserProfile)
 router.post('/uploadProfileImage',upload.single('uploaded_file'), imageController.uploadProfileImage)
 router.get('/getProfileImage', imageController.getProfileImage)
-
+router.post('/createLodge', lodgeController.createLodge)
 
 module.exports = router;
