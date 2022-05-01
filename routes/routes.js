@@ -20,5 +20,7 @@ router.post('/updateUserProfile', userController.updateUserProfile)
 router.post('/uploadProfileImage',upload.single('uploaded_file'), imageController.uploadProfileImage)
 router.get('/getProfileImage', imageController.getProfileImage)
 router.post('/createLodge', lodgeController.createLodge)
+router.get('/getLodgeByOwner', lodgeController.getLodgeByOwner)
+router.get('/getLodgeByName', lodgeController.getLodgeByName)
 
 module.exports = router;

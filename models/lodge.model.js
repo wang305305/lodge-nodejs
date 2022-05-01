@@ -6,6 +6,10 @@ const lodgeSchema = new Schema({
         type: String,
         required: 'Lodgename cannot be empty'
     },
+    owner: {
+        type: String,
+        required: 'owner cannot be empty'
+    },
     streetAddress: {
         type: String,
         required: 'streetAddress cannot be empty'
