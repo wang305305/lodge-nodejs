@@ -26,6 +26,10 @@ const lodgeSchema = new Schema({
         type: String,
         required: 'country cannot be empty'
     },
+    startingPrice: {
+        type: Number,
+        required: 'starting price cannot be empty'
+    },
     flyIn: {
         type: Boolean
     }
