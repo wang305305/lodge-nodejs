@@ -31,7 +31,7 @@ module.exports.uploadProfileImage = async (req, res, next) => {
 
         const result = await Image.deleteOne({ username: req.body.username }).exec();
 
-        if (result.deletedCount != 1) return res.status(400).send({ message: "Cannot delete profile image with username " + req.body.username });
+        //if (result.deletedCount != 1) return res.status(400).send({ message: "Cannot delete profile image with username " + req.body.username });
         console.log(result)
         await image.save(async err => {
             if (err) {
