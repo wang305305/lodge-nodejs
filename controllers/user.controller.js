@@ -16,7 +16,7 @@ module.exports.register = async (req, res, next) => {
     // check unique username and email 
     const username_result = await User.findOne({ username: req.body.username }).exec();
     if (username_result) return res.status(400).send({ message: "Duplicate username" });
-    const email_result = await User.findOne({ username: req.body.username }).exec();
+    const email_result = await User.findOne({ email: req.body.email }).exec();
     if (email_result) return res.status(400).send({ message: "Duplicate email" });
 
     await user.save(async err => {
