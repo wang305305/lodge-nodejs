@@ -10,24 +10,25 @@ const port = 3000;
 
 app.set('trust proxy', 'loopback');
 app.use(bodyParser.json())
-app.use(cors({
-    origin: "http://localhost:4200",
-    credentials: true
-}))
 
-// var multer = require('multer');
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'uploads')
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, file.fieldname + '-' + Date.now())
-//     }
-// })
 
-// const upload = multer({ storage: storage })
+if (process.env.NODE_ENV === 'development') {
+    app.use(cors({
+        origin: "http://localhost:4200",
+        credentials: true
+    }))
+}
 
-const multer  = require('multer')
+if (process.env.NODE_ENV === 'production') {
+    app.use(cors({
+        origin: ["http://lodgeexp.com","https://lodgeexp.com","http://www.lodgeexp.com","https://www.lodgeexp.com"],
+        credentials: true
+    }))
+    
+}
+
+
+const multer = require('multer')
 const upload = multer({ dest: './public/data/uploads/' })
 
 
