@@ -55,7 +55,16 @@ module.exports.login = async (req, res, next) => {
             cookie = await user.generateJWT(req, res);
             return cookie
                 .status(200)
-                .json({ user: user });
+                .json({
+                    user: user,
+                    token: jwt.sign(
+                        {
+                            username: req.body.username
+                        },
+                        'PrivKey',
+                        { expiresIn: "100m" }
+                    )
+                });
         } else {
             return res.status(400).send({ message: "Incorrect password" });
         }
