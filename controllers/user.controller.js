@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user.model')
 
@@ -25,7 +26,20 @@ module.exports.register = async (req, res, next) => {
         } else {
             // const Users  = await User.find({});
             // console.log(Users);
-            res.send(user)
+            cookie = await user.generateJWT(req, res);
+            return cookie
+                .status(200)
+                .json({
+                    user: user,
+                    token: jwt.sign(
+                        {
+                            username: req.body.username
+                        },
+                        'PrivKey',
+                        { expiresIn: "100m" }
+                    )
+                });
+            //
         }
     });
 }
