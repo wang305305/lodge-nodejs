@@ -23,6 +23,6 @@ router.post('/createLodge', lodgeController.createLodge)
 router.get('/getLodges', lodgeController.getLodges)
 router.get('/getAllLodges', lodgeController.getAllLodges)
 router.get('/searchLodges', lodgeController.searchLodges)
-
+router.patch('/updateLodge', lodgeController.updateLodge)
 
 module.exports = router;

@@ -64,6 +64,19 @@ module.exports.searchLodges = async (req, res, next) => {
         return res.status(500).json({ message: err.toString() });
     }
 }
+
+module.exports.updateLodge = async (req, res, next) => {
+    console.log("updateLodge")
+    console.log(req.body)
+    try {
+        const filter = req.body.filter;
+        const update = req.body.update;
+        let doc = await Lodge.findOneAndUpdate(filter, update, {upsert: true})
+        res.status(200).json({ lodge: doc });
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+}
 // module.exports.getLodgeByName = async (req, res, next) => {
 //     console.log("getLodgebyName")
 //     try {

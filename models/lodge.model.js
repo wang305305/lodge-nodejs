@@ -32,7 +32,10 @@ const lodgeSchema = new Schema({
     },
     flyIn: {
         type: Boolean
-    }
+    },
+    reviews: [{
+        type: String
+    }]
 }
 );
 
