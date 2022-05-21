@@ -35,7 +35,13 @@ const lodgeSchema = new Schema({
     },
     reviews: [{
         type: String
-    }]
+    }],
+    ratings: {
+        attributes: [{
+            type: Map,
+            of: String
+        }]
+    }
 }
 );
 
