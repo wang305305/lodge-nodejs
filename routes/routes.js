@@ -24,5 +24,8 @@ router.get('/getLodges', lodgeController.getLodges)
 router.get('/getAllLodges', lodgeController.getAllLodges)
 router.get('/searchLodges', lodgeController.searchLodges)
 router.patch('/updateLodge', lodgeController.updateLodge)
+router.post('/addToWishList', userController.addToWishList)
+router.post('/deleteFromWishList', userController.deleteFromWishList)
+router.post('/isLodgeInWishList', userController.isLodgeInWishList)
 
 module.exports = router;

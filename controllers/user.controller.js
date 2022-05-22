@@ -110,3 +110,46 @@ module.exports.welcome = async (req, res, next) => {
     console.log("welco")
     res.send({ message: "welcomeeeeeeeeeeeeeeeee" });
 };
+
+module.exports.addToWishList = async (req, res, next) => {
+    console.log("addToWishList")
+    console.log(req.body)
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { username: req.body.username },
+            {$push: {"wishList": req.body.lodgeName}},
+            {safe: true, upsert: true, new: true}).exec();
+        if (!updatedUser) return res.status(400).send({ message: "Cannot add to wish list" });
+        console.log(updatedUser)
+        res.status(200).json({ user: updatedUser });
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+};
+
+module.exports.deleteFromWishList = async (req, res, next) => {
+    console.log("deleteFromWishList")
+    console.log(req.body)
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { username: req.body.username },
+            {$pull: {"wishList": req.body.lodgeName}},
+            {safe: true, upsert: true, new: true}).exec();
+        if (!updatedUser) return res.status(400).send({ message: "Cannot delete from wish list" });
+        console.log(updatedUser)
+        res.status(200).json({ user: updatedUser });
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+};
+
+module.exports.isLodgeInWishList = async (req, res, next) => {
+    console.log("isLodgeInWishList")
+    console.log(req.body)
+    try {
+        let result = await User.find({wishList: req.body.lodgeName, username: req.body.username}).exec(); 
+        res.status(200).json({ added: result.length });
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+};

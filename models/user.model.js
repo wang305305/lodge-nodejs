@@ -27,7 +27,8 @@ const userSchema = new Schema({
     },
     lodgeOwner: {
         type: Boolean
-    }
+    },
+    wishList: [String]
 }
 );
 
