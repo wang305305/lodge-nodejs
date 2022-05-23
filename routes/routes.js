@@ -27,5 +27,6 @@ router.patch('/updateLodge', lodgeController.updateLodge)
 router.post('/addToWishList', userController.addToWishList)
 router.post('/deleteFromWishList', userController.deleteFromWishList)
 router.post('/isLodgeInWishList', userController.isLodgeInWishList)
+router.post('/reservePayment', userController.reservePayment)
 
 module.exports = router;

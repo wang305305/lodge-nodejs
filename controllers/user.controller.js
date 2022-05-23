@@ -153,3 +153,19 @@ module.exports.isLodgeInWishList = async (req, res, next) => {
         return res.status(500).json({ message: err.toString() });
     }
 };
+
+module.exports.reservePayment = async (req, res, next) => {
+    console.log("reservePayment")
+    console.log(req.body)
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { username: req.body.username },
+            {deposit: true},
+            {safe: true, upsert: true, new: true}).exec();
+        if (!updatedUser) return res.status(400).send({ message: "Cannot update deposit info" });
+        console.log(updatedUser)
+        res.status(200).json({ user: updatedUser });
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+};
