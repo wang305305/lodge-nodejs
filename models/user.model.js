@@ -32,6 +32,12 @@ const userSchema = new Schema({
     deposit: {
         type: Boolean
     },
+    verificationToken: {
+        type: String
+    },
+    emailVerified: {
+        type: Boolean
+    },
 }
 );
 
