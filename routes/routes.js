@@ -29,5 +29,7 @@ router.post('/deleteFromWishList', userController.deleteFromWishList)
 router.post('/isLodgeInWishList', userController.isLodgeInWishList)
 router.post('/reservePayment', userController.reservePayment)
 router.get('/verifyEmail', userController.verifyEmail)
+router.get('/passwordReset', userController.passwordReset)
+router.patch('/updatePassword', userController.updatePassword)
 
 module.exports = router;

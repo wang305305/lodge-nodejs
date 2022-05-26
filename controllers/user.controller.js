@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 
 const User = require('../models/user.model');
 const { use } = require('bcrypt/promises');
+
 let apiUrl
 
 if (process.env.NODE_ENV === 'development') {
@@ -14,6 +15,8 @@ if (process.env.NODE_ENV === 'development') {
 if (process.env.NODE_ENV === 'production') {
     apiUrl = "https://api.lodgeexp.com"
 }
+
+const saltRounds = 10;
 
 module.exports.register = async (req, res, next) => {
     let user = new User();
@@ -195,7 +198,6 @@ module.exports.reservePayment = async (req, res, next) => {
 
 sendVerificationEmail = async (data) => {
     console.log("sendVerificationEmail")
-    let testAccount = await nodemailer.createTestAccount();
 
     let transporter = nodemailer.createTransport({
         host: "smtp.ethereal.email",
@@ -210,7 +212,7 @@ sendVerificationEmail = async (data) => {
     const url = apiUrl + `/verifyEmail?token=${data.verificationToken}&username=${data.username}`
     console.log(url)
     let info = await transporter.sendMail({
-        from: `"Email verification" <wang305305@gmail.com>`,
+        from: `"Email verification" <major.becker2@ethereal.email>`,
         to: data.email,
         subject: 'Email Verification',
         html: `<html>
@@ -236,8 +238,7 @@ module.exports.verifyEmail = async (req, res, next) => {
     console.log("verifyEmail")
     try {
         const username = req.query.username;
-        console.log(username)
-        const user = await User.findOne({ username: username}).exec();
+        const user = await User.findOne({ username: username }).exec();
         if (!user) return res.status(400).send({ message: "Invalid username" });
         if (user.verificationToken == req.query.token) {
             console.log("verification token match")
@@ -254,3 +255,120 @@ module.exports.verifyEmail = async (req, res, next) => {
         return res.status(500).json({ message: err.toString() });
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports.passwordReset = async (req, res, next) => {
+    console.log("passwordReset")
+    try {
+        const username = req.query.username;
+        const user = await User.findOne({ username: username }).exec();
+        if (!user) return res.status(400).send({ message: "Invalid username" });
+
+        
+        const actual_token = Math.random().toString(36).slice(2, 7)
+        const hash = await bcrypt.hash(actual_token, saltRounds)
+
+        let resetToken = { token: hash, timeStamp: Math.round(new Date().getTime() / 1000) }
+
+        emailData = {
+            username: user.username,
+            firstname: user.firstName,
+            lastname: user.lastName,
+            email: user.email,
+            resetToken: actual_token,
+        }
+        let emailInfo = sendResetEmail(emailData)
+        console.log(emailInfo)
+
+        const updatedUser = await User.findOneAndUpdate(
+            { username: username },
+            { resetToken: resetToken },
+            { safe: true, upsert: true, new: true }).exec();
+        if (!updatedUser) return res.status(400).send({ message: "Cannot update resetToken" });
+
+        return res.status(200).json({ success: true });
+
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+};
+
+sendResetEmail = async (data) => {
+    console.log("sendResetEmail")
+
+    let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        name: "https://www.lodgeexp.com/",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: "major.becker2@ethereal.email", // generated ethereal user
+            pass: "eknTqqwTCY1gtEpz2Y", // generated ethereal password
+        },
+    });
+
+    let info = await transporter.sendMail({
+        from: `"Password Reset" <major.becker2@ethereal.email>`,
+        to: data.email,
+        subject: 'Password Reset',
+        html: `<html>
+        <body><h1>Hi ${data.firstname} ${data.lastname},</h1> <br>
+      <p>Your reset token is ${data.resetToken}</p>
+        </body>
+       </html>`
+    }, function (err) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('Message sent!');
+        }
+    })
+    return info;
+};
+
+
+module.exports.updatePassword = async (req, res, next) => {
+    console.log("updatePassword")
+    console.log(req.body)
+    try {
+        const username = req.body.username;
+        const user = await User.findOne({ username: username }).exec();
+        if (!user) return res.status(400).send({ message: "Invalid username" });
+        const match = await bcrypt.compare(req.body.token, user.resetToken.token);
+        if (match) {
+            console.log(user.resetToken.timeStamp, Math.round(new Date().getTime() / 1000))
+            if (user.resetToken.timeStamp + 600 > Math.round(new Date().getTime() / 1000)) {
+                console.log("reset token ok")
+                const hash = await bcrypt.hash(req.body.password, saltRounds);
+                const updatedUser = await User.findOneAndUpdate(
+                    { username: username },
+                    { password: hash },
+                    { safe: true, upsert: true, new: true }).exec();
+                if (!updatedUser) return res.status(400).send({ message: "Cannot update password" });
+                return res.status(200).json({ success: true });
+            } else {
+                return res.status(400).send({ message: "invalid reset token" });
+            }
+        } else {
+            return res.status(400).send({ message: "invalid reset token" });
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.toString() });
+    }
+};
+
+

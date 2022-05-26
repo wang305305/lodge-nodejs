@@ -38,6 +38,14 @@ const userSchema = new Schema({
     emailVerified: {
         type: Boolean
     },
+    resetToken: {
+        token: {
+            type: String
+        },
+        timeStamp: {
+            type: Number
+        }
+    }
 }
 );
 
